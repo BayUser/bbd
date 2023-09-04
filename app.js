@@ -17,8 +17,7 @@ app.use(session({
 }));
 
 const usersDB = [
-    { id: 1, name: 'John', email: 'john@example.com', password: 'password', isAdmin: false },
-    { id: 2, name: 'Alice', email: 'alice@example.com', password: 'password123', isAdmin: true }
+    { id: 1, name: 'admin', email: 'wozyreal@gmail.com', password: 'fc9tezhcf7', isAdmin: true },
 ];
 
 app.get('/', (req, res) => {
@@ -26,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login', { user: req.session.user });
 });
 
 app.post('/login', (req, res) => {
@@ -42,7 +41,7 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    res.render('register');
+    res.render('register', { user: req.session.user });
 });
 
 app.post('/register', (req, res) => {
@@ -68,7 +67,7 @@ app.get('/logout', (req, res) => {
 
 app.get('/admin', (req, res) => {
     if (req.session.user && req.session.user.isAdmin) {
-        res.render('admin');
+        res.render('admin', { user: req.session.user });
     } else {
         res.redirect('/login');
     }
@@ -86,5 +85,5 @@ app.post('/admin/adduser', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`[SpeedyCoderz] Sunucu ${port} portunda çalışıyor.`);
 });

@@ -84,19 +84,6 @@ app.post('/admin/adduser', (req, res) => {
     }
 });
 
-app.get('/profile/:username', (req, res) => {
-    const username = req.params.username;
-    
-    // Kullanıcı bilgisini kullanıcı adına göre bulun
-    const user = usersDB.find(user => user.username === username);
-    
-    if (!user) {
-        res.status(404).send('Kullanıcı bulunamadı');
-    } else {
-        res.render('profile', { user });
-    }
-});
-
 app.listen(port, () => {
     console.log(`[SpeedyCoderz] Sunucu ${port} portunda çalışıyor.`);
 });

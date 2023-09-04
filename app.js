@@ -45,8 +45,8 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    const { name, email, password } = req.body;
-    const newUser = { id: usersDB.length + 1, name, email, password, isAdmin: false };
+    const { name, email, password, biography } = req.body;
+    const newUser = { id: usersDB.length + 1, name, email, password, isAdmin: false, biography:"" };
     usersDB.push(newUser);
     res.redirect('/login');
 });
@@ -84,11 +84,20 @@ app.post('/admin/adduser', (req, res) => {
     }
 });
 
- gösterin veya başka bir işlem yapın.
+app.post('/edit-bio', (req, res) => {
+    if (req.session.user) {
+        const userId = req.session.user.id;
+        const newBiography = req.body.biography;
+
+        const user = usersDB.find(u => u.id === userId);
+        if (user) {
+            user.biography = newBiography;
+            req.session.user.biography = newBiography;
+            res.redirect('/profile');
+        } else {
             res.status(404).send('Kullanıcı bulunamadı.');
         }
     } else {
-        // Kullanıcı oturumu yoksa, giriş sayfasına yönlendirin veya hata mesajı gösterin.
         res.redirect('/login');
     }
 });

@@ -1,13 +1,33 @@
 <!-- views/index.ejs -->
-<%- include('partials/head', { title: 'Ana Sayfa' }) %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head bileşenini ekleyin (partials/head.ejs) -->
+    <%- include('partials/head', { title: 'Ana Sayfa' }) %>
+</head>
 <body>
-    <div class="container">
-        <%- include('partials/navbar') %>
-        <h1 class="mt-5">Ana Sayfa</h1>
-        <!-- Ana sayfa içeriği buraya gelecek -->
-        <%- include('partials/footer') %>
+    <!-- Navbar bileşenini ekleyin (partials/navbar.ejs) -->
+    <%- include('partials/navbar') %>
+
+    <div class="container mt-5">
+        <h1>Son Konular</h1>
+        <!-- Konu listesini burada gösterin -->
+        <ul class="list-group mt-3">
+            <% konuDB.forEach(konu => { %>
+                <li class="list-group-item">
+                    <h3><%= konu.title %></h3>
+                    <p><strong>Yazar:</strong> <%= konu.author %></p>
+                    <p><%= konu.content %></p>
+                </li>
+            <% }); %>
+        </ul>
     </div>
-    <!-- Bootstrap JS bağlantısı -->
+
+    <!-- Footer bileşenini ekleyin (partials/footer.ejs) -->
+    <%- include('partials/footer') %>
+
+    <!-- Bootstrap JS bağlantısını eklemeyi unutmayın -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

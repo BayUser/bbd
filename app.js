@@ -15,6 +15,11 @@ app.use(session({
     resave: true,
     saveUninitialized: false
 }));
+const konuDB = [
+    { id: 1, title: 'Konu Başlığı 1', content: 'Konu içeriği 1', author: 'Kullanıcı 1' },
+    { id: 2, title: 'Konu Başlığı 2', content: 'Konu içeriği 2', author: 'Kullanıcı 2' },
+    // Diğer konuları ekleyin
+];
 
 const usersDB = [
     { id: 1, name: 'admin', email: 'wozyreal@gmail.com', password: 'fc9tezhcf7', isAdmin: true, biography: ''  },
@@ -99,6 +104,36 @@ app.post('/edit-bio', (req, res) => {
         }
     } else {
         res.redirect('/login');
+    }
+});
+
+app.post('/create', (req, res) => {
+    const { title, content } = req.body;
+    const author = req.session.user.name; // Oturum açmış kullanıcının adı
+
+    // Yeni konu verisini oluşturun
+    const newTopic = {
+        title,
+        content,
+        author,
+        date: new Date() // Konu oluşturulma tarihi
+    };
+
+    // Yeni konu verisini konuDB dizisine ekleyin
+    konuDB.push(newTopic);
+
+    res.redirect('/');
+});
+
+// app.js
+
+// ... (diğer kodlar)
+
+app.get('/create', (req, res) => {
+    if (req.session.user) {
+        res.render('create', { user: req.session.user });
+    } else {
+        res.redirect('/login'); // Kullanıcı oturumu açmamışsa login sayfasına yönlendir
     }
 });
 

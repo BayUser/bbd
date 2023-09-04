@@ -1,0 +1,22 @@
+<!-- views/create.ejs -->
+
+<%- include('partials/head', { title: 'Konu Oluştur' }) %>
+<body>
+    <div class="container">
+        <%- include('partials/navbar') %>
+        <h1 class="mt-5">Yeni Konu Oluştur</h1>
+        <form action="/create" method="POST">
+            <div class="form-group">
+                <label for="title">Başlık:</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="content">İçerik:</label>
+                <textarea class="form-control" id="content" name="content" rows="6" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Konu Oluştur</button>
+        </form>
+        <%- include('partials/footer') %>
+    </div>
+</body>
+</html>

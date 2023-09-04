@@ -26,7 +26,7 @@ const usersDB = [
 ];
 
 app.get('/', (req, res) => {
-    res.render('index', { user: req.session.user });
+    res.render('index', { user: req.session.user, konuDB });
 });
 
 app.get('/login', (req, res) => {
@@ -121,7 +121,6 @@ app.post('/create', (req, res) => {
 
     // Yeni konu verisini konuDB dizisine ekleyin
     konuDB.push(newTopic);
-
     res.redirect('/');
 });
 

@@ -1,8 +1,7 @@
-// app.js
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const mongoose = require('mongoose'); // Mongoose'ü içe aktarın
 const app = express();
 const port = 3000;
 
@@ -15,126 +14,69 @@ app.use(session({
     resave: true,
     saveUninitialized: false
 }));
-const konuDB = [
-    { id: 1, title: 'Konu Başlığı 1', content: 'Konu içeriği 1', author: 'Kullanıcı 1' },
-    { id: 2, title: 'Konu Başlığı 2', content: 'Konu içeriği 2', author: 'Kullanıcı 2' },
-    // Diğer konuları ekleyin
-];
 
-const usersDB = [
-    { id: 1, name: 'admin', email: 'wozyreal@gmail.com', password: 'fc9tezhcf7', isAdmin: true, biography: ''  },
-];
-
-app.get('/', (req, res) => {
-    res.render('index', { user: req.session.user, konuDB });
+mongoose.connect('mongodb://localhost:27017/proje_adiniz', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
+    console.log('MongoDB bağlantısı başarılı.');
+}).catch((err) => {
+    console.error('MongoDB bağlantı hatası:', err);
 });
 
-app.get('/login', (req, res) => {
-    res.render('login', { user: req.session.user });
+const KonuSchema = new mongoose.Schema({
+    title: String,
+    content: String,
+    author: String,
+    date: { type: Date, default: Date.now },
 });
 
-app.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    const user = usersDB.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-        req.session.user = user;
-        res.redirect('/profile');
-    } else {
-        res.redirect('/login');
-    }
-});
+const Konu = mongoose.model('Konu', KonuSchema);
 
-app.get('/register', (req, res) => {
-    res.render('register', { user: req.session.user });
-});
+// Diğer kodlar burada
 
-app.post('/register', (req, res) => {
-    const { name, email, password, biography } = req.body;
-    const newUser = { id: usersDB.length + 1, name, email, password, isAdmin: false, biography:"" };
-    usersDB.push(newUser);
-    res.redirect('/login');
-});
-
-app.get('/profile', (req, res) => {
+app.get('/create', (req, res) => {
     if (req.session.user) {
-        res.render('profile', { user: req.session.user });
+        res.render('create', { user: req.session.user });
     } else {
         res.redirect('/login');
     }
 });
 
-app.get('/logout', (req, res) => {
-    req.session.destroy(() => {
-        res.redirect('/');
-    });
-});
-
-app.get('/admin', (req, res) => {
-    if (req.session.user && req.session.user.isAdmin) {
-        res.render('admin', { user: req.session.user });
-    } else {
-        res.redirect('/login');
-    }
-});
-
-app.post('/admin/adduser', (req, res) => {
-    if (req.session.user && req.session.user.isAdmin) {
-        const { name, email, password } = req.body;
-        const newUser = { id: usersDB.length + 1, name, email, password, isAdmin: false };
-        usersDB.push(newUser);
-        res.redirect('/admin');
-    } else {
-        res.redirect('/login');
-    }
-});
-
-app.post('/edit-bio', (req, res) => {
+app.post('/create', async (req, res) => {
     if (req.session.user) {
-        const userId = req.session.user.id;
-        const newBiography = req.body.biography;
+        const { title, content } = req.body;
+        const author = req.session.user.name;
 
-        const user = usersDB.find(u => u.id === userId);
-        if (user) {
-            user.biography = newBiography;
-            req.session.user.biography = newBiography;
-            res.redirect('/profile');
-        } else {
-            res.status(404).send('Kullanıcı bulunamadı.');
+        const newTopic = new Konu({
+            title,
+            content,
+            author,
+        });
+
+        try {
+            await newTopic.save();
+            res.redirect('/');
+        } catch (err) {
+            console.error('Konu kaydedilirken hata oluştu:', err);
+            res.status(500).send('Konu oluşturma hatası');
         }
     } else {
         res.redirect('/login');
     }
 });
 
-app.post('/create', (req, res) => {
-    const { title, content } = req.body;
-    const author = req.session.user.name; // Oturum açmış kullanıcının adı
-
-    // Yeni konu verisini oluşturun
-    const newTopic = {
-        title,
-        content,
-        author,
-        date: new Date() // Konu oluşturulma tarihi
-    };
-
-    // Yeni konu verisini konuDB dizisine ekleyin
-    konuDB.push(newTopic);
-    res.redirect('/');
-});
-
-// app.js
-
-// ... (diğer kodlar)
-
-app.get('/create', (req, res) => {
-    if (req.session.user) {
-        res.render('create', { user: req.session.user });
-    } else {
-        res.redirect('/login'); // Kullanıcı oturumu açmamışsa login sayfasına yönlendir
+app.get('/', async (req, res) => {
+    try {
+        const konular = await Konu.find().sort({ date: 'desc' });
+        res.render('index', { user: req.session.user, konular });
+    } catch (err) {
+        console.error('Konuları getirirken hata oluştu:', err);
+        res.status(500).send('Konuları getirme hatası');
     }
 });
+
+// Diğer kodlar burada
 
 app.listen(port, () => {
     console.log(`[SpeedyCoderz] Sunucu ${port} portunda çalışıyor.`);

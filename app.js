@@ -17,7 +17,7 @@ app.use(session({
 }));
 
 const usersDB = [
-    { id: 1, name: 'admin', email: 'wozyreal@gmail.com', password: 'fc9tezhcf7', isAdmin: true },
+    { id: 1, name: 'admin', email: 'wozyreal@gmail.com', password: 'fc9tezhcf7', isAdmin: true, biography: ''  },
 ];
 
 app.get('/', (req, res) => {
@@ -80,6 +80,15 @@ app.post('/admin/adduser', (req, res) => {
         usersDB.push(newUser);
         res.redirect('/admin');
     } else {
+        res.redirect('/login');
+    }
+});
+
+ gösterin veya başka bir işlem yapın.
+            res.status(404).send('Kullanıcı bulunamadı.');
+        }
+    } else {
+        // Kullanıcı oturumu yoksa, giriş sayfasına yönlendirin veya hata mesajı gösterin.
         res.redirect('/login');
     }
 });

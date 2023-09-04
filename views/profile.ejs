@@ -1,0 +1,19 @@
+<!-- views/profile.ejs -->
+<%- include('partials/head', { title: 'Profil Sayfası' }) %>
+<body>
+    <div class="container">
+        <%- include('partials/navbar') %>
+        <h1 class="mt-5">Profil Sayfanız</h1>
+        <div class="mt-3">
+            <p><strong>Adınız:</strong> <%= user.name %></p>
+            <p><strong>E-posta:</strong> <%= user.email %></p>
+            <!-- Diğer kullanıcı bilgilerini burada gösterin -->
+        </div>
+        <%- include('partials/footer') %>
+    </div>
+    <!-- Bootstrap JS bağlantısı -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

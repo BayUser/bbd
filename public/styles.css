@@ -1,0 +1,49 @@
+/* Tema Anahtarlayıcısı için Stil Kuralları */
+.theme-switcher {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* Genişlik ayarı */
+    height: 26px; /* Yükseklik ayarı */
+    overflow: hidden; /* İçeriği sınırlamak için */
+    background-color: #ccc;
+    border-radius: 30px; /* Yuvarlak kenarlık */
+    cursor: pointer;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.theme-switcher label input {
+    display: none; /* Görünmez input */
+}
+
+.theme-switcher label .slider {
+    position: absolute;
+    content: "";
+    height: 22px; /* Kaydırıcı yüksekliği */
+    width: 50px; /* Kaydırıcı genişliği */
+    left: 0;
+    bottom: 2px; /* Kaydırıcı alt boşluğu */
+    background-color: #fff;
+    border-radius: 30px; /* Yuvarlak kaydırıcı */
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+/* Ay ve Güneş İkonları */
+.theme-switcher label .slider::before {
+    content: "\f185"; /* Ay ikonu (Font Awesome) */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 16px; /* İkon boyutu */
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #fff;
+    z-index: 2; /* Ön plana getirin */
+}
+
+.theme-switcher label input:checked + .slider::before {
+    content: "\f186"; /* Güneş ikonu (Font Awesome) */
+    left: 20px; /* Güneş ikonunu ayırmak için */
+}
